@@ -13,3 +13,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::on_button_single_mode_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_button_multiplayer_mode_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+

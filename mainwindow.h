@@ -15,6 +15,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+
+    void on_button_single_mode_clicked();
+
+    void on_button_multiplayer_mode_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
