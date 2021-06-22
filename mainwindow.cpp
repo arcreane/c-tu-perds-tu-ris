@@ -97,7 +97,7 @@ void MainWindow::setHasPlayerSmiled(bool playerSmiled) {
 
 void MainWindow::countDown() {
     this->hasPlayerSmiled = false;
-    std::this_thread::sleep_for(std::chrono::seconds(1)); //this->roundDuration
+    std::this_thread::sleep_for(std::chrono::seconds(8)); //this->roundDuration
     if (this->hasPlayerSmiled) {
         qInfo() << "END GAME";
         //this->endGame();
