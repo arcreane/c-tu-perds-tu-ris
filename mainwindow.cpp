@@ -4,7 +4,6 @@
 #include <QString>
 #include <QtCore>
 #include <QCoreApplication.h>
-#include "Game.h"
 #include <QDebug>
 #include <string>
 #include "opencv2/objdetect.hpp"
@@ -21,11 +20,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    {
-
-    };
-
-    
 }
 
 MainWindow::~MainWindow()
@@ -39,15 +33,13 @@ void MainWindow::setTitle(QString theme)
 }
 
 
-void MainWindow::showJoke() {
-    if (this->hasPlayerSmiled) {
-
-    }
+void MainWindow::showJoke()
+{
     ui->current_joke->setText(this->jokesList[this->nextRoundIndex]);
 }
 
 void MainWindow::showTheme() {
-    ui->current_theme->setText("Th�me: " + this->chosenTheme);
+    ui->current_theme->setText(this->chosenTheme);
 }
 
 void MainWindow::showJokeIndex() {
@@ -56,7 +48,6 @@ void MainWindow::showJokeIndex() {
 }
 
 void MainWindow::startGame() {
-    //this->setQuestionList();
     this->nextRoundIndex = 0;
     this->hasPlayerSmiled = false;
     this->nextRound();
@@ -73,7 +64,6 @@ void MainWindow::startRound() {
 void MainWindow::startTimer() {
     int CountDown = this->roundDuration;
     std::thread timerThread(&MainWindow::countDown, this);
-
     timerThread.detach();
 }
 
@@ -100,7 +90,6 @@ void MainWindow::countDown() {
     std::this_thread::sleep_for(std::chrono::seconds(8)); //this->roundDuration
     if (this->hasPlayerSmiled) {
         qInfo() << "END GAME";
-        //this->endGame();
     }
     else {
         qInfo() << "NEXT ROUND";
@@ -113,6 +102,7 @@ void MainWindow::nextRound() {
     if (this->hasPlayerSmiled == true) {
         qInfo() << "SMILE";
     }
+
     if (this->nextRoundIndex == 10 ) {
         qInfo() << "END GAME";
     }
@@ -198,7 +188,6 @@ void MainWindow::on_button_all_theme_clicked(QString theme)
     ui->stackedWidget->setCurrentIndex(2);
     this->startGame();
 }
-
 
 void MainWindow::on_replay_clicked() {
     ui->stackedWidget->setCurrentIndex(1);

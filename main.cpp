@@ -10,8 +10,6 @@
 #include <QCoreApplication.h>
 #include <iostream>
 
-#include "Game.h"
-
 using namespace std;
 using namespace cv;
 
@@ -38,6 +36,8 @@ int main(int argc, char* argv[])
 
     CascadeClassifier cascade, nestedCascade;
     double scale;
+
+    // import detecte face and smile from opencv
     cv::CommandLineParser parser(argc, argv,
         "{scale|1|}"
         "{cascade|data/haarcascades/haarcascade_frontalface_alt.xml|}"
@@ -86,15 +86,21 @@ int main(int argc, char* argv[])
             Mat frame1 = frame.clone();
 
             int resultFace = detectAndDraw(frame1, cascade, nestedCascade, scale, tryflip, mainWindow);
+
+            // application is closed
             if (resultFace == -1) {
                 return -1;
-            }else if (resultFace == 1 && mainWindow.nextRoundIndex != 0 && mainWindow.nextRoundIndex != 10) {
+            }
+            // smile detected && currentRound is a number from 0 to 10 
+            else if (resultFace == 1 && mainWindow.nextRoundIndex != 0 && mainWindow.nextRoundIndex != 10) {
                 mainWindow.hasPlayerSmiled = true;
                 mainWindow.setTitle("VOUS AVEZ PERDU !");
             }
+            // player do not smiled && cuurrentround == 10
             else if (mainWindow.hasPlayerSmiled == false && mainWindow.nextRoundIndex == 10) {
                 mainWindow.setTitle("VOUS AVEZ GAGNE !");
             }
+
             char c = (char)waitKey(10);
             if (c == 27 || c == 'q' || c == 'Q')
                 break;

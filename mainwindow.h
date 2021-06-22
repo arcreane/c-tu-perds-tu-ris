@@ -21,6 +21,8 @@ private:
 	// Game Config
 	int roundDuration = 3;
 	int questionsPerPlayer = 10;
+
+	// Jokes list 
 	QString jokesList[10] = {
 		"Pourquoi les canards sont toujours a l'heure ? Parce qu'ils sont dans l'etang.",
 		"Pourquoi n'y a-t-il pas de ballon sur le plateau de Questions Pour Un Champion ? Car Julien Lepers." ,
