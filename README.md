@@ -17,3 +17,7 @@ Tu ris tu perds, est un jeu basé sur la détection de visage et de sourire, 10 
 - Réalisation de l'interface sous Qt Designer | `Amanda Elfassy`
 - Class/Methods | `Dantin Durand`
 - Réalisation de l'API | `Amanda Elfassy`
+
+## API
+
+Lien de l'api: https://tuperdsturis.herokuapp.com/api/jokes
