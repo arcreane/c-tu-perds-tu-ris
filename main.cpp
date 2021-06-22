@@ -15,7 +15,7 @@
 using namespace std;
 using namespace cv;
 
-void detectAndDraw(Mat& img, CascadeClassifier& cascade,
+int detectAndDraw(Mat& img, CascadeClassifier& cascade,
     CascadeClassifier& nestedCascade,
     double scale, bool tryflip, MainWindow& mainwindow);
 
@@ -84,8 +84,17 @@ int main(int argc, char* argv[])
                 break;
 
             Mat frame1 = frame.clone();
-            detectAndDraw(frame1, cascade, nestedCascade, scale, tryflip, mainWindow);
 
+            int resultFace = detectAndDraw(frame1, cascade, nestedCascade, scale, tryflip, mainWindow);
+            if (resultFace == -1) {
+                return -1;
+            }else if (resultFace == 1 && mainWindow.nextRoundIndex != 0 && mainWindow.nextRoundIndex != 10) {
+                mainWindow.hasPlayerSmiled = true;
+                mainWindow.setTitle("VOUS AVEZ PERDU !");
+            }
+            else if (mainWindow.hasPlayerSmiled == false && mainWindow.nextRoundIndex == 10) {
+                mainWindow.setTitle("VOUS AVEZ GAGNE !");
+            }
             char c = (char)waitKey(10);
             if (c == 27 || c == 'q' || c == 'Q')
                 break;
@@ -100,10 +109,14 @@ int main(int argc, char* argv[])
     // QT
     return a.exec();
 }
-void detectAndDraw(Mat& img, CascadeClassifier& cascade,
+int detectAndDraw(Mat& img, CascadeClassifier& cascade,
     CascadeClassifier& nestedCascade,
-    double scale, bool tryflip, MainWindow& mainwindow)
+    double scale, bool tryflip, MainWindow& mainWindow)
 {
+    cout << "CloseGame " << mainWindow.CloseGame << endl;
+    if (mainWindow.CloseGame == true) {
+        return -1;
+    }
     vector<Rect> faces, faces2;
     const static Scalar colors[] =
     {
@@ -147,6 +160,7 @@ void detectAndDraw(Mat& img, CascadeClassifier& cascade,
 
     for (size_t i = 0; i < faces.size(); i++)
     {
+        
         Rect r = faces[i];
         Mat smallImgROI;
         vector<Rect> nestedObjects;
@@ -200,6 +214,9 @@ void detectAndDraw(Mat& img, CascadeClassifier& cascade,
         //}
 
         rectangle(img, Point(0, img.rows), Point(img.cols / 10, img.rows - rect_height), col, -1);
+        if (intensityZeroOne > 0.8) {
+            return 1;
+        }
     }
     imshow("Webcam", img);
 }

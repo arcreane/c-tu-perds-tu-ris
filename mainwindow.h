@@ -31,19 +31,22 @@ private:
 		"Savez-vous qui est Bob Marlex ? Euh Bah, c'est un chanteur de regex." ,
 		"C'est une requete SQL qui entre dans un bar, et le serveur repond :  Il n'y a plus de tables !",
 		"Que dit un escargot quand il croise une limace ? Oh un naturiste.",
-		"C'est l'histoire d'un papier qui tombe à l'eau. Il crie : Au secours ! J'ai pas pied !"
+		"C'est l'histoire d'un papier qui tombe ï¿½ l'eau. Il crie : Au secours ! J'ai pas pied !"
 	};
 	
 	// Predefined config
 	int playerCount;
-	int nextRoundIndex;
+	
 	QString chosenTheme;
 	Ui::MainWindow* ui;
 	bool didUserWin;
 	bool isMultiplayerMode;
-	bool hasPlayerSmiled = false;
 	int currentCounter = 0;
-
+	void showTheme();
+	void showJoke();
+	void changeJokeCounter();
+	void showJokeIndex();
+	void endGame();
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -51,86 +54,31 @@ public:
     bool multiplayerMode() const { return this->isMultiplayerMode; }
 	QString theme() const { return this->chosenTheme; }
 
-	void startGame() {
-		//this->setQuestionList();
-		this->nextRoundIndex = 0;
-		this->nextRound();
-	}
+	void startGame();
 
-	void nextRound() {
-		this->changeJokeCounter();
- 		if (this->nextRoundIndex == 10) {
-			this->endGame();
-		} else {
-			this->startRound();
-		}
-	};
+	void nextRound();
 
+	void countDown();
 
+	bool CloseGame = false;
 
-	void countDown() {
-		this->hasPlayerSmiled = false;
-		std::this_thread::sleep_for(std::chrono::seconds(8)); //this->roundDuration
-		if (this->hasPlayerSmiled) {
-			this->endGame();
-			qInfo() << "END GAME";
-		}
-		else {
-			qInfo() << "NEXT ROUND";
-			this->nextRound();
-		}
-	}
+	bool hasPlayerSmiled = false;
 
-	void startTimer() {
-		int CountDown = this->roundDuration;
-		std::thread timerThread(&MainWindow::countDown, this);
-		timerThread.detach();
-	}
+	int nextRoundIndex;
 
+	void startTimer();
 
-	void startRound() {
-		this->showJoke();
-		this->nextRoundIndex += 1;
-		this->startTimer();
-	};
+	void startRound();
 
+	void setTitle(QString text);
 
-    //void setQuestionsList() {
-    //    //get question list via API call
-    //    QString fetchedQuestionList[10] = { "patate", "fromage", "raclette", "epinard", "foie gras", "spagetti", "tomates", "poisson", "crouton", "pain" };
+	void setHasPlayerSmiled(bool playerSmiled);
 
-    //    for (int i = 0; i < sizeof(this->jokesList); i++) {
-    //        this->jokesList[i] = fetchedQuestionList[i];
-    //    }
-    //};
+	void setChosenTheme(QString theme);
 
-
-	void setHasPlayerSmiled(bool playerSmiled) {
-		this->hasPlayerSmiled = playerSmiled;
-	}
-
-
-	void setChosenTheme(QString theme) {
-		this->chosenTheme = theme;
-	}
-
-	void setMultiplayerMode(bool multiplayer) {
-		this->isMultiplayerMode = multiplayer;
-		if (multiplayer == true) {
-			this->playerCount = 2;
-		}
-		else {
-			this->playerCount = 1;
-		}
-	}
-
+	void setMultiplayerMode(bool multiplayer);
 
 private slots:
-	void showTheme();
-	void showJoke();
-	void changeJokeCounter();
-	void showJokeIndex();
-	void endGame();
     void on_button_single_mode_clicked();
     void on_button_multiplayer_mode_clicked();
 	void on_replay_clicked();
@@ -142,5 +90,8 @@ private slots:
 	void on_button_boring_theme_clicked(QString theme = "LOURD");
 	void on_button_teacher_theme_clicked(QString theme = "PROF");
 	void on_button_all_theme_clicked(QString theme = "TOUS");
+    void on_back_to_menu_clicked();
+	void on_button_exit_clicked();
+	
 };
 #endif // MAINWINDOW_H

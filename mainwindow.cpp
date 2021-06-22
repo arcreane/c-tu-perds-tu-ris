@@ -23,8 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     {
 
-        /*       connect(&game, &Game::closeGame, &a, &QCoreApplication::quit, Qt::QueuedConnection);*/
     };
+
+    
 }
 
 MainWindow::~MainWindow()
@@ -32,19 +33,94 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::setTitle(QString theme)
+{
+    ui->current_joke->setText(theme);
+}
+
 
 void MainWindow::showJoke() {
+    if (this->hasPlayerSmiled) {
+
+    }
     ui->current_joke->setText(this->jokesList[this->nextRoundIndex]);
 }
 
 void MainWindow::showTheme() {
-    ui->current_theme->setText("Thème: " + this->chosenTheme);
+    ui->current_theme->setText("Thï¿½me: " + this->chosenTheme);
 }
 
 void MainWindow::showJokeIndex() {
     QString jokesPassed = QString::number(this->nextRoundIndex);
     ui->joke_counter->setText(jokesPassed);
 }
+
+void MainWindow::startGame() {
+    //this->setQuestionList();
+    this->nextRoundIndex = 0;
+    this->hasPlayerSmiled = false;
+    this->nextRound();
+}
+
+void MainWindow::startRound() {
+    this->showJoke();
+    this->nextRoundIndex += 1;
+    this->startTimer();
+
+};
+
+
+void MainWindow::startTimer() {
+    int CountDown = this->roundDuration;
+    std::thread timerThread(&MainWindow::countDown, this);
+
+    timerThread.detach();
+}
+
+void MainWindow::setChosenTheme(QString theme) {
+    this->chosenTheme = theme;
+}
+
+void MainWindow::setMultiplayerMode(bool multiplayer) {
+    this->isMultiplayerMode = multiplayer;
+    if (multiplayer == true) {
+        this->playerCount = 2;
+    }
+    else {
+        this->playerCount = 1;
+    }
+}
+
+void MainWindow::setHasPlayerSmiled(bool playerSmiled) {
+    this->hasPlayerSmiled = playerSmiled;
+};
+
+void MainWindow::countDown() {
+    this->hasPlayerSmiled = false;
+    std::this_thread::sleep_for(std::chrono::seconds(1)); //this->roundDuration
+    if (this->hasPlayerSmiled) {
+        qInfo() << "END GAME";
+        //this->endGame();
+    }
+    else {
+        qInfo() << "NEXT ROUND";
+        this->nextRound();
+    }
+}
+
+void MainWindow::nextRound() {
+    this->changeJokeCounter();
+    if (this->hasPlayerSmiled == true) {
+        qInfo() << "SMILE";
+    }
+    if (this->nextRoundIndex == 10 ) {
+        qInfo() << "END GAME";
+    }
+    else {
+        this->startRound();
+
+    }
+};
 
 void MainWindow::changeJokeCounter() {
     QString jokesPassed = QString::number(this->nextRoundIndex);
@@ -130,3 +206,15 @@ void MainWindow::on_replay_clicked() {
 void MainWindow::on_main_menu_clicked() {
     ui->stackedWidget->setCurrentIndex(0);
 };
+
+void MainWindow::on_back_to_menu_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+
+void MainWindow::on_button_exit_clicked()
+{
+    close();
+    this->CloseGame = true;
+}
